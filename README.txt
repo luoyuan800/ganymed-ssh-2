@@ -4,6 +4,7 @@ But add support for *diffie-hellman-group-exchange-sha256*
 No too much code change for it, so it maybe safe to apply this code into your project.
 Just downlod the source code and build a jar to replace the older one
 The code change are base on 261.
+Gavin on 5/26/2017
 
 Ganymed SSH-2 for Java - build 261.1
 ==================================
