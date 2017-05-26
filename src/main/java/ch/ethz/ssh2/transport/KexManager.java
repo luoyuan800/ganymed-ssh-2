@@ -203,7 +203,7 @@ public abstract class KexManager implements MessageHandler {
             int enc_sc_key_len = BlockCipherFactory.getKeySize(kxs.np.enc_algo_server_to_client);
             int enc_sc_block_len = BlockCipherFactory.getBlockSize(kxs.np.enc_algo_server_to_client);
 
-            km = KeyMaterial.create("SHA1", kxs.H, kxs.K, sessionId, enc_cs_key_len, enc_cs_block_len, mac_cs_key_len,
+            km = KeyMaterial.create(kxs.np.kex_algo.endsWith("sha1") ? "SHA1" : "SHA2", kxs.H, kxs.K, sessionId, enc_cs_key_len, enc_cs_block_len, mac_cs_key_len,
                     enc_sc_key_len, enc_sc_block_len, mac_sc_key_len);
         }
         catch(IllegalArgumentException e) {
@@ -270,7 +270,7 @@ public abstract class KexManager implements MessageHandler {
     }
 
     public static String[] getDefaultClientKexAlgorithmList() {
-        return new String[]{"diffie-hellman-group-exchange-sha1", "diffie-hellman-group14-sha1",
+        return new String[]{"diffie-hellman-group-exchange-sha256","diffie-hellman-group-exchange-sha1", "diffie-hellman-group14-sha1",
                 "diffie-hellman-group1-sha1"};
     }
 
@@ -287,6 +287,9 @@ public abstract class KexManager implements MessageHandler {
                 continue;
             }
             if("diffie-hellman-group1-sha1".equals(algo)) {
+                continue;
+            }
+            if("diffie-hellman-group-exchange-sha256".equals(algo)){
                 continue;
             }
             throw new IllegalArgumentException(String.format("Unknown kex algorithm %s", algo));

@@ -124,7 +124,7 @@ public class ClientKexManager extends KexManager {
                 ignore_next_kex_packet = true;
             }
 
-            if(kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha1")) {
+            if(kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha1") || kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha256")) {
                 if(kxs.dhgexParameters.getMin_group_len() == 0) {
                     PacketKexDhGexRequestOld dhgexreq = new PacketKexDhGexRequestOld(kxs.dhgexParameters);
                     tm.sendKexMessage(dhgexreq.getPayload());
@@ -213,10 +213,10 @@ public class ClientKexManager extends KexManager {
             throw new IOException("Unexpected Kex submessage!");
         }
 
-        if(kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha1")) {
+        if(kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha1") || kxs.np.kex_algo.equals("diffie-hellman-group-exchange-sha256")) {
             if(kxs.state == 1) {
                 PacketKexDhGexGroup dhgexgrp = new PacketKexDhGexGroup(msg);
-                kxs.dhgx = new DhGroupExchange(dhgexgrp.getP(), dhgexgrp.getG());
+                kxs.dhgx = new DhGroupExchange(dhgexgrp.getP(), dhgexgrp.getG(), kxs.np.kex_algo);
                 kxs.dhgx.init(rnd);
                 PacketKexDhGexInit dhgexinit = new PacketKexDhGexInit(kxs.dhgx.getE());
                 tm.sendKexMessage(dhgexinit.getPayload());

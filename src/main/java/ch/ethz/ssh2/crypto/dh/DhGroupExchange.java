@@ -36,9 +36,16 @@ public class DhGroupExchange {
 
     private BigInteger k;
 
-    public DhGroupExchange(BigInteger p, BigInteger g) {
+    private String hashAlgo;
+
+    public DhGroupExchange(BigInteger p, BigInteger g, String kexAlgo) {
         this.p = p;
         this.g = g;
+        if(kexAlgo.endsWith("sha1")) {
+            this.hashAlgo = "SHA1";
+        }else{
+            this.hashAlgo = "SHA2";
+        }
     }
 
     public void init(SecureRandom rnd) {
@@ -90,7 +97,7 @@ public class DhGroupExchange {
 
     public byte[] calculateH(byte[] clientversion, byte[] serverversion, byte[] clientKexPayload,
                              byte[] serverKexPayload, byte[] hostKey, DHGexParameters para) throws IOException {
-        HashForSSH2Types hash = new HashForSSH2Types("SHA1");
+        HashForSSH2Types hash = new HashForSSH2Types(hashAlgo);
 
         hash.updateByteString(clientversion);
         hash.updateByteString(serverversion);
